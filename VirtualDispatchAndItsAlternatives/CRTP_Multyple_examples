@@ -1,0 +1,57 @@
+#include <iostream>
+#include <ctime>
+#include <type_traits>
+
+using namespace std;        // You shouldn't
+
+template <typename D = void>
+class BaseFilter 
+{
+public:
+	void Activate() {    
+	  Activate_impl (std::is_same<D, void>{});
+	}
+	void Activate_impl (std::true_type) {    
+	  cout << "Base Activate" << endl;
+	}
+//protected:
+	~BaseFilter() = default;
+};
+
+template <typename D = void>
+class MiddleFilter : public BaseFilter<MiddleFilter<D>> 
+{ 
+public:
+	void Activate() {
+		Activate_impl (std::is_same<D, void>{});
+	}
+private:
+	void Activate_impl (std::true_type) {    
+	  cout << "Middle Activate" << endl;
+	}
+
+	void Activate_impl (std::false_type) {
+    static_cast<D&>(*this).Activate();
+  }
+};
+
+class FilterDerived : public MiddleFilter<FilterDerived> 
+{
+public:
+	void Activate() {    
+		cout << "Derived Activate" << endl;
+	}
+};
+
+
+int main()
+{
+  MiddleFilter<FilterDerived> f1;
+	f1.Activate();  
+	FilterDerived f2;
+	f2.Activate();  
+  MiddleFilter<> f3;    
+	f3.Activate();  
+  BaseFilter f5;
+  f5.Activate();
+}
