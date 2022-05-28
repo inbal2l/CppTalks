@@ -1,0 +1,114 @@
+
+Customization Methods: Connecting User And Library Code
+=======================================================
+
+Slide 12:
+1.	Namespaces ordering: https://godbolt.org/z/qvMcYn1Kd (if in both the namespace and the argument’s namespace)
+
+Slide 18:
+1.	https://godbolt.org/z/eTznPrno5
+
+Slide 21:
+1.	Basic: https://godbolt.org/z/q8sKeEfEP
+
+Slide 22:
+2.	Partial template specialization: https://godbolt.org/z/veGqnca94
+
+Slide 23:
+3.	Delegation (from Gasper’s talk) (default do nothing): https://godbolt.org/z/TM67coxvn
+Paper talking about namespaces specialization (was not voted): http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3730.html
+
+Slide 24:
+3.	Delegation (default do something): https://godbolt.org/z/zsPcTnP9r
+4.	User gain functionality using Inheritance: https://godbolt.org/z/brKPsb83d
+
+Slide 25:
+Additional info:
+3.	Template specialization: Of class in UserSpace fails (https://godbolt.org/z/Y896ejWxo), 
+4.	Template specialization: Of class in global space works (https://godbolt.org/z/6PdebYn1K) (*)
+5.	https://fmt.dev/latest/index.html
+
+Slide 27:
+1.	https://godbolt.org/z/xfGcWM76q
+Specialization issue: Function template void vs. auto case:
+1.	Fails for specializing “auto” template with “void”: https://godbolt.org/z/ejv9nKrEq 
+Due to breaking the rule: https://eel.is/c++draft/dcl.spec.auto#general-13 (TAD: http://eel.is/c++draft/temp.deduct#decl-1)
+2.	Works for “void” for both the template and specialization: https://godbolt.org/z/7ea68K7rM
+
+Slide 28:
+3.	https://godbolt.org/z/vTeTEcYd5
+4.	https://godbolt.org/z/hcPEqEx6f
+5.	https://godbolt.org/z/rK1zffh56
+6.	https://godbolt.org/z/xsc5r679W
+
+(*) “Hidden friends”: inline (header defined) friend function, visible for ADL as if it was on the external scope.
+•	(*) Namespces: https://en.cppreference.com/w/cpp/language/namespace
+Out-of-namespace definitions and redeclarations are only allowed
+•	after the point of declaration,
+•	at namespace scope, and
+•	in namespaces that enclose the original namespace (including the global namespace).
+     Also, they must use qualified-id syntax. (since C++14)
+
+Slide 29:
+•	https://stackoverflow.com/questions/11562/how-to-overload-stdswap
+
+Slide 31:
+1.	ADL:
+1.	Free fun: https://godbolt.org/z/3s8dbe8jE
+2.	Friend: https://godbolt.org/z/374jo55xs
+2.	Hidden Friend:
+1.	https://www.justsoftwaresolutions.co.uk/cplusplus/hidden-friends.html
+2.	https://stackoverflow.com/questions/56795676/hidden-friends-declarations-and-definitions#:~:text=Hidden%20friends%20need%20to%20be,of%20the%20definition%20of%20class.
+3.	Example: Operator <<: https://godbolt.org/z/1vdPYn71K
+
+Slide 35:
+Implementations:
+1.	Functor in UserSpace: Need to qualify: https://godbolt.org/z/eK4vWYve1
+2.	Functor in LibSpace: redeclaration as different kind of entity: https://godbolt.org/z/hef9Tzhc8
+3.	Functor in global space: reference is ambiguous: https://godbolt.org/z/MWf8MjMjb
+
+Slide 36:
+1.	Swap CPOs simplified implementation: https://godbolt.org/z/sEj8TsYaj
+(based on example from Eric Niebler’s blog: http://ericniebler.com/2014/10/21/customization-point-design-in-c11-and-beyond/)
+2.	CPOs directly in LibSpace (without __detail): https://godbolt.org/z/4KocG93cP
+1.	Will not work unqualified because the call would be ambiguous
+2.	Algorithm LibFunc will (correctly) trigger ADL lookup
+
+Slide 37:
+1.	Implementation C++17: https://godbolt.org/z/do3reW45T
+2.	begin CPO full example: https://godbolt.org/z/1d53zsbdG
+3.	swap CPO full example: https://godbolt.org/z/1d53zsbdG
+
+Slide 40:
+1.	https://godbolt.org/z/7Yzenf4oo
+•	Example is from great blog post by Jonathan Muller: Structural vs. nominal https://www.foonathan.net/2021/07/concepts-structural-nominal/
+
+Slide 44:
+1.	Virtual version: https://godbolt.org/z/5jKW7KMd5
+2.	Deducing This version: https://godbolt.org/z/8KrY7E1zM
+
+Slide 47:
+1.	Simplest implementation I could find: Implementation using duck_invoke: https://godbolt.org/z/j8o9bGs1z
+2.	Eric Niebler’s simple tag_invoke: https://gist.github.com/ericniebler/056f5459cf259da526d9ea2279c386bb
+
+Slide 49:
+2.	Improvement of usage: https://godbolt.org/z/qnnEbf3qo
+
+Slide 54:
+1.	Reflection experimental: https://compiler-explorer.com/z/shMz3of5P
+2.	https://compiler-explorer.com/z/TrYEYhqMK
+3.	https://github.com/matus-chochlik/llvm-project
+
+Slide 55:
+1.	Reflection experimental: https://compiler-explorer.com/z/shMz3of5P
+2.	https://compiler-explorer.com/z/TrYEYhqMK
+3.	https://github.com/matus-chochlik/llvm-project
+
+Slide 69:
+1.	Template specialization example: https://godbolt.org/z/6zbx9q6ns
+2.	Template specialization and namespaces:
+•	https://en.cppreference.com/w/cpp/language/namespace
+•	https://stackoverflow.com/questions/2282349/specialization-of-templateclass-tp-struct-stdless-in-different-namespace
+•	https://stackoverflow.com/questions/25594644/warning-specialization-of-template-in-different-namespace
+•	https://stackoverflow.com/questions/3072248/why-arent-template-specializations-allowed-to-be-in-different-namespaces
+•	https://stackoverflow.com/questions/25311512/specialization-of-template-in-different-namespace

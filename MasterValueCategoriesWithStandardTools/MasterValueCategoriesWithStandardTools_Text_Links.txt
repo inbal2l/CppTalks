@@ -1,0 +1,104 @@
+
+Master Value Categories With Standard Tools
+===========================================
+
+Slide 5:
+1.	https://godbolt.org/z/39fMoTnEs
+
+Slide 7:
+1.	Example with PRINT_TYPE_VALUE and PRINT_ORIGIN_VALUE: https://godbolt.org/z/57f64e187
+
+Slide 10:
+•	C++11 + Fixes: https://timsong-cpp.github.io/cppwp/n3337/basic.lval
+•	C++17: https://timsong-cpp.github.io/cppwp/n4659/basic.lval
+•	C++20: https://timsong-cpp.github.io/cppwp/n4868/
+•	C++ latest: https://eel.is/c++draft/basic.lval
+•	Papers to add rvalue references (to solve the forwarding problem):
+•	2002: A Proposal to Add Move Semantics Support to the C++ Language (Howard E. Hinnant, Peter Dimov, Dave Abrahams)
+http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2002/n1377.htm
+•	2002: The Forwarding Problem: Arguments (Peter Dimov, Howard E. Hinnant, Dave Abrahams)
+http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2002/n1385.htm
+•	2004: A Proposal to Add an Rvalue Reference to the C++ Language (Howard E. Hinnant, Dave Abrahams, Peter Dimov)
+http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2004/n1690.html
+•	2006: A Brief Introduction to Rvalue References (Howard E. Hinnant, Bjarne Stroustrup, Bronek Lozicki)
+http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2006/n2027.html
+
+Slide 19:
+•	Const rvalue references usability: 
+	[Check] `constexpr T value() const && = delete` Can be used to prohibit the method's use on prvalues and xvalues.
+	https://www.codesynthesis.com/~boris/blog/2012/07/24/const-rvalue-references/
+	https://stackoverflow.com/questions/24824432/what-is-use-of-the-ref-qualifier-const
+
+Slide 20:
+1.	https://godbolt.org/z/srxox1nq8
+•	Rules of reference initialization: https://en.cppreference.com/w/cpp/language/reference_initialization
+•	https://docs.microsoft.com/en-us/windows/uwp/cpp-and-winrt-apis/cpp-value-categories
+
+Slide 21:
+1.	https://godbolt.org/z/ej75e8fxn (Example extending one by Boris Kolpackov: https://www.codesynthesis.com/~boris/blog/2012/07/24/const-rvalue-references/)
+2.	https://godbolt.org/z/sjMnPh6jn
+
+Slide 22:
+1.	https://godbolt.org/z/h9PWref83
+2.	https://godbolt.org/z/jeq93h4cY
+•	Return Value Optimization: https://shaharmike.com/cpp/rvo/#return-value-optimization (Shahar Mike)
+•	https://jonasdevlieghere.com/guaranteed-copy-elision/#guaranteedcopyelision
+
+Slide 24:
+1.	https://godbolt.org/z/5xWrYajW4
+2.	https://godbolt.org/z/1qYhqK4Yo
+•	Implicit conversions (including lvalue-to-rvalue): https://en.cppreference.com/w/cpp/language/implicit_conversion
+
+Slide 29:
+1.	Scott Meyers: Universal Reference: https://isocpp.org/blog/2012/11/universal-references-in-c11-scott-Meyers
+2.	Identity function safety: https://medium.com/@barryrevzin/xvalues-and-prvalues-the-next-generation-10bd4b60a96a
+
+Slide 32:
+1.	std::is_same examples (is_same, decay_is_same, remove_ref_is_same): https://godbolt.org/z/q5s9PcMrW
+
+Slide 33:
+•	Test using decltype: https://godbolt.org/z/azTjWPbaP
+•	decltype((x)) evaluates, yields an expression (lvalue): https://docs.microsoft.com/en-us/cpp/cpp/decltype-cpp?view=msvc-170
+More Info:
+•	Paper with decltype(auto): http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3638.html
+•	https://stackoverflow.com/questions/24109737/what-are-some-uses-of-decltypeauto
+•	Test: https://godbolt.org/z/6Mx6c16n5
+
+Slide 36:
+1.	Declval: https://godbolt.org/z/j6fMsf4Ma
+
+Slide 37:
+1.	Declval with value categories: https://godbolt.org/z/6EEWGro4v
+2.	(and Types): https://godbolt.org/z/afGsqWsqK
+
+Slide 38:
+1.	Utility remove_ref_is_same: https://godbolt.org/z/q9d6PxEsj
+
+Slide 39:
+1.	Move demonstrated with Foo: https://godbolt.org/z/hfvbbfMef
+2.	Move demonstrated with is_same: https://godbolt.org/z/Wqs1a7b8r
+3.	Const rvalue references: https://www.codesynthesis.com/~boris/blog/2012/07/24/const-rvalue-references/
+
+Slide 40:
+1.	Example Wrapper, NFWrapper: https://godbolt.org/z/9YbPb63GG
+
+Slide 40:
+1.	std::is_same examples (is_same, decay_is_same, remove_ref_is_same): https://godbolt.org/z/edM6qMGa5
+
+Slide 43:
+1.	https://godbolt.org/z/TqWjYbeG9
+2.	https://godbolt.org/z/Mqh6fhdM4
+https://en.cppreference.com/w/cpp/utility/functional/reference_wrapper
+
+Slide 46:
+1.	https://godbolt.org/z/n5o1qaK7f
+•	auto(x): decay-copy in the language: https://wg21.link/p0849
+
+Slide 47:
+1.	https://godbolt.org/z/K4T6vMaj5
+2.	T definition: object of that type can be constructed from an rvalue of that type in both direct- and copy-initialization contexts.
+3.	P0398: Core issue 1518: Explicit default constructors and copy-list-initialization (http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2016/p0398r0.html) (http://eel.is/c++draft/over#match.ctor-1.sentence-2)
+
+Slide 48:
+1.	Movable concept: https://en.cppreference.com/w/cpp/concepts/movable
+2.	assignable_from: https://en.cppreference.com/w/cpp/concepts/assignable_from
